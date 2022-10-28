@@ -7,6 +7,7 @@ PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION)
 import Geolocation from '@react-native-community/geolocation';
 import { FlashList } from '@shopify/flash-list';
 import xtype from 'xtypejs'
+const chats = require('./chats.js')
 
 // Geolocation.setRNConfiguration({
 //     skipPermissionRequests: false,
@@ -22,12 +23,17 @@ import xtype from 'xtypejs'
 
  const App = (props) => {
   const backAction = () => {
-    changewidthback()
-    if(indw==0){
-      BackHandler.exitApp()
-    }else{
+    
+    if(indw==1){
+      changewidthback()
       setindw(0)
+    }else if(indw==2){
+      changewidth()
+      setindw(1)
+    }else{
+      BackHandler.exitApp()
     }
+    
     return true;
   };
   useEffect(() => {
@@ -134,60 +140,100 @@ import xtype from 'xtypejs'
 
   ]); 
   const panResponder = useRef(
+    
     PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponderCapture: (evt, gest) => gest.dx,
       onPanResponderMove:(evt, gest)=>{
         const activetouches = evt.nativeEvent.changedTouches.length;
-        
         if (activetouches === 1){
-          scroll.setValue(gest.dy)
-          console.log(scroll)
-          if((JSON.stringify(scroll)+0<1 && JSON.stringify(scroll)+0>-1) || JSON.stringify(needclose)-0>1){
-            needclose.setValue(gest.dx)
-            if(JSON.stringify(needclose)+0>250){
-              slide.setValue( 250)
-            }else if(JSON.stringify(needclose)+0<0){
-              slide.setValue( 0)
-            }else{
-              slide.setValue(JSON.stringify(needclose)-0)
-            }
-            const len1=slide.interpolate({
-              inputRange:[0, 250],
-              outputRange:[1, 0]
-            })
-            if(JSON.stringify(len1)+0<1){
-              Animated.timing(progress, {
-                toValue: len1,
+          needclose.setValue(gest.dx)
+          if(JSON.stringify(needclose)+0>250){
+            slide.setValue( 250)
+          }else if(JSON.stringify(needclose)+0<-50){
+            slide.setValue( -50)
+          }else{
+            slide.setValue(JSON.stringify(needclose)-0)
+          }
+          if(JSON.stringify(slide)-0>0){
+            if(JSON.stringify(indwAnim)-0==1){
+              Animated.parallel([
+                Animated.timing(open1, {
+                  toValue: -windowWidth+(windowWidth*15/100)+(JSON.stringify(slide)-0),
+                  duration: 0,
+                  useNativeDriver: true
+                }).start(),
+                Animated.timing(open2, {
+                  toValue: windowWidth-(windowWidth*20/100)-(JSON.stringify(slide)-0),
+                  duration: 0,
+                  useNativeDriver: true
+                }).start(),
+                Animated.timing(open3, {
+                  toValue: -windowWidth+(windowWidth*15/100)+(JSON.stringify(slide)-0),
+                  duration: 0,
+                  useNativeDriver: true
+                }).start(),
+              ])
+            }else if(JSON.stringify(indwAnim)-0==2){
+              Animated.parallel([
+                Animated.timing(open1, {
+                  toValue: -windowWidth+(JSON.stringify(slide)-0),
+                  duration: 0,
+                  useNativeDriver: true
+                }).start(),
+                Animated.timing(open2, {
+                  toValue: windowWidth-(windowWidth*20/100)-(JSON.stringify(slide)-0),
+                  duration: 0,
+                  useNativeDriver: true
+                }).start(),
+                Animated.timing(open3, {
+                  toValue: -windowWidth+(JSON.stringify(slide)-0),
+                  duration: 0,
+                  useNativeDriver: true
+                }).start(),
+              ])
+            } 
+          }
+          if(JSON.stringify(slide)-0<0 && JSON.stringify(indwAnim)-0==1){
+            Animated.parallel([
+              Animated.timing(open1, {
+                toValue: -windowWidth+(windowWidth*15/100)+(JSON.stringify(slide)-0),
                 duration: 0,
                 useNativeDriver: true
-              }).start()
-            }
+              }).start(),
+              Animated.timing(open3, {
+                toValue: -windowWidth+(windowWidth*15/100)+(JSON.stringify(slide)-0),
+                duration: 0,
+                useNativeDriver: true
+              }).start(),
+            ])
             
           }
           
         }
       },
       onPanResponderRelease:(evt, gest)=>{
-        const len1=slide.interpolate({
-              inputRange:[150, 250],
-              outputRange:[1, 0]
-            })
-        if(JSON.stringify(len1)+0<1 && JSON.stringify(needclose)-0>1){
-          needclose.setValue(0)
+        if(JSON.stringify(slide)-0>100){
           close()
-        }else{
+        }else if((JSON.stringify(slide)-0<40 && JSON.stringify(indwAnim)-0==2) || (JSON.stringify(slide)-0<-40 && JSON.stringify(indwAnim)-0==1)){
+          openwider()
+        }else if((JSON.stringify(slide)-0>40 && JSON.stringify(indwAnim)-0==2) || (JSON.stringify(slide)-0>-40 && JSON.stringify(indwAnim)-0==1))(
           open()
-        }
+        )
         
         
       }
     })
   ).current;
   const [indw, setindw] = useState(0)
+  const [chat, setchat] = useState(0)
   const [bgcolor, setbgcolor] = useState('#b3d6b8')
   const needclose = useRef(new Animated.Value(0)).current;
-  const progress = useRef(new Animated.Value(0)).current;
+  const open1 = useRef(new Animated.Value(0)).current;
+  const open2 = useRef(new Animated.Value(0)).current;
+  const open3 = useRef(new Animated.Value(0)).current;
+  const open4 = useRef(new Animated.Value(0)).current;
   const slide = useRef(new Animated.Value(0)).current;
+  const indwAnim = useRef(new Animated.Value(0)).current;
   const scroll = useRef(new Animated.Value(0)).current;
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
@@ -213,7 +259,7 @@ const nothing = ()=>{
 
 
 const Item = ({ item }) => (
-  <TouchableOpacity  style={styles.item} onPress={open}>
+  <TouchableOpacity  style={styles.item} onPress={() => openchat(item.id)}>
     <Text style={styles.label}numberOfLines={1} >{item.title} </Text>
     <Animated.View style={[styles.container3, itemwidth3]}>
     <Image source={item.img} style={styles.image1} resizeMode="stretch"></Image>
@@ -227,58 +273,139 @@ const renderItem = ({ item }) => (
   <Item item={item} />
 );
 
+const Item2 = ({ item }) => (
+  <TouchableOpacity  style={styles.item} >
+    <Text style={styles.label}>{item.msg} </Text>
+  </TouchableOpacity >
+);
+
+const renderItem2 = ({ item }) => (
+  <Item2 item={item} />
+);
+
+openchat=(chatid)=>{
+  setchat(chatid-1)
+  open()
+}
+
 open=()=>{
   setindw(1)
+  indwAnim.setValue(1)
   changewidth()
 }
 close=()=>{
   setindw(0)
+  indwAnim.setValue(0)
   changewidthback()
+}
+openwider=()=>{
+  setindw(2)
+  indwAnim.setValue(2)
+  changewidth2()
 }
 
 const changewidth = () =>{
-  Animated.timing(progress, {
-    toValue: 1,
-    duration: 100,
-    useNativeDriver: true
-  }).start()
+  Animated.parallel([
+    Animated.timing(open1, {
+      toValue: -windowWidth+(windowWidth*15/100),
+      duration: 100,
+      useNativeDriver: true
+    }).start(),
+    Animated.timing(open2, {
+      toValue: windowWidth-(windowWidth*20/100),
+      duration: 100,
+      useNativeDriver: true
+    }).start(),
+    Animated.timing(open3, {
+      toValue: -windowWidth+(windowWidth*15/100),
+      duration: 100,
+      useNativeDriver: true
+    }).start(),
+    Animated.timing(open4, {
+      toValue: windowWidth-(windowWidth*20/100),
+      duration: 100,
+      useNativeDriver: true
+    }).start(),
+  ])
+  setbgcolor('#213144')
+}
+
+const changewidth2 = () =>{
+  Animated.parallel([
+    Animated.timing(open1, {
+      toValue: -windowWidth,
+      duration: 100,
+      useNativeDriver: true
+    }).start(),
+    Animated.timing(open3, {
+      toValue: -windowWidth,
+      duration: 100,
+      useNativeDriver: true
+    }).start(),
+    Animated.timing(open4, {
+      toValue: -windowWidth,
+      duration: 100,
+      useNativeDriver: true
+    }).start(),
+  ])
   setbgcolor('#213144')
 }
 
 const changewidthback = () =>{
-  Animated.timing(progress, {
-    toValue: 0,
-    duration: 50,
-    useNativeDriver: true
-  }).start() 
+  Animated.parallel([
+    Animated.timing(open1, {
+      toValue: 0,
+      duration: 50,
+      useNativeDriver: true
+    }).start(),
+    Animated.timing(open2, {
+      toValue: 0,
+      duration: 50,
+      useNativeDriver: true
+    }).start(),
+    Animated.timing(open3, {
+      toValue: 0,
+      duration: 100,
+      useNativeDriver: true
+    }).start(),
+    Animated.timing(open4, {
+      toValue: windowWidth-(windowWidth*20/100),
+      duration: 100,
+      useNativeDriver: true
+    }).start(),
+  ])
+  
   setbgcolor('#b3d6b8')
 }
 
-const progressAnim=progress.interpolate({
-  inputRange:[0, 1],
-  outputRange:[0, -windowWidth+(windowWidth*15/100)]
-})
-const anotherWidth=progress.interpolate({
-  inputRange:[0, 1],
-  outputRange:[0, -windowWidth+(windowWidth*15/100)]
-})
-const anotherWidth2=progress.interpolate({
-  inputRange:[0, 1],
-  outputRange:[0, windowWidth-(windowWidth*20/100)]
-})
+const progressAnim=0
+// progress.interpolate({
+//   inputRange:[0, 1],
+//   outputRange:[0, -windowWidth+(windowWidth*15/100)]
+// })
+const anotherWidth=0
+// progress.interpolate({
+//   inputRange:[0, 1],
+//   outputRange:[0, -windowWidth+(windowWidth*15/100)]
+// })
+const anotherWidth2=0
+// progress.interpolate({
+//   inputRange:[0, 1],
+//   outputRange:[0, windowWidth-(windowWidth*20/100)]
+// })
 
 const itemwidth = {
-  transform: [{ translateX: progressAnim }],
+  transform: [{ translateX: open1 }],
   // width: progressAnim,
   
 }
 const itemwidth2 = {
-  transform: [{ translateX: anotherWidth }],
-  // width: anotherWidth,
+  transform: [{ translateX: open3 }],
+  width: windowWidth-(windowWidth*15/100),
   
 }
 const itemwidth3 = {
-  transform: [{ translateX: anotherWidth2 }],
+  transform: [{ translateX: open2 }],
   // width: anotherWidth,
   
 }
@@ -298,6 +425,7 @@ return (
       <View style = {styles.container2}>
       <Animated.View style={[styles.container1, itemwidth, {backgroundColor: bgcolor}]}>
         <FlashList
+        
         data={data}
         renderItem={renderItem}
         keyExtractor={item => item.id}
@@ -310,7 +438,16 @@ return (
       <Animated.View style={[styles.sider, itemwidth2]}
       {...panResponder.panHandlers}
       >
-        <Text style={styles.labelheader}>some text</Text>
+        <FlashList
+        
+        data={chats[chat]}
+        renderItem={renderItem2}
+        keyExtractor={item => item.id}
+        // onEndReached={}
+        onEndReachedThreshold={3}
+        estimatedItemSize={20}
+        // style = {styles.flatlist}
+        />
       </Animated.View>
 
       </View>
@@ -350,7 +487,7 @@ const styles = StyleSheet.create({
   },
   sider: {
     backgroundColor: '#213144',
-    width:'100%',
+    height:'100%',
   },
   label: {
     flex:1,
