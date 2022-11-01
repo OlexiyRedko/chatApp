@@ -142,58 +142,69 @@ const chats = require('./chats.js')
   const panResponder = useRef(
     
     PanResponder.create({
+      onMoveShouldSetPanResponder: (evt, gest) => gest.dx,
       onMoveShouldSetPanResponderCapture: (evt, gest) => gest.dx,
       onPanResponderMove:(evt, gest)=>{
         const activetouches = evt.nativeEvent.changedTouches.length;
         if (activetouches === 1){
-          needclose.setValue(gest.dx)
-          if(JSON.stringify(needclose)+0>250){
-            slide.setValue( 250)
-          }else if(JSON.stringify(needclose)+0<-50){
-            slide.setValue( -50)
+
+          if(JSON.stringify(gest.dx)-0>290){
+            slide.setValue( 290)
+          }else if(JSON.stringify(gest.dx)-0<-90){
+            slide.setValue( -90)
           }else{
-            slide.setValue(JSON.stringify(needclose)-0)
+            slide.setValue(JSON.stringify(gest.dx)-0)
           }
-          if(JSON.stringify(slide)-0>0){
-            if(JSON.stringify(indwAnim)-0==1){
-              Animated.parallel([
-                Animated.timing(open1, {
-                  toValue: -windowWidth+(windowWidth*15/100)+(JSON.stringify(slide)-0),
-                  duration: 0,
-                  useNativeDriver: true
-                }).start(),
-                Animated.timing(open2, {
-                  toValue: windowWidth-(windowWidth*20/100)-(JSON.stringify(slide)-0),
-                  duration: 0,
-                  useNativeDriver: true
-                }).start(),
-                Animated.timing(open3, {
-                  toValue: -windowWidth+(windowWidth*15/100)+(JSON.stringify(slide)-0),
-                  duration: 0,
-                  useNativeDriver: true
-                }).start(),
-              ])
+          
+          if(JSON.stringify(side)==0 || JSON.stringify(side)==1){
+            if(JSON.stringify(slide)-0>20){
+              side.setValue(1)
+              if(JSON.stringify(indwAnim)-0==1){
+                Animated.parallel([
+                  Animated.timing(open1, {
+                    toValue: -windowWidth+(windowWidth*15/100)+(JSON.stringify(slide)-20),
+                    duration: 0,
+                    useNativeDriver: true
+                  }).start(),
+                  Animated.timing(open2, {
+                    toValue: windowWidth-(windowWidth*20/100)-(JSON.stringify(slide)-20),
+                    duration: 0,
+                    useNativeDriver: true
+                  }).start(),
+                  Animated.timing(open3, {
+                    toValue: -windowWidth+(windowWidth*15/100)+(JSON.stringify(slide)-20),
+                    duration: 0,
+                    useNativeDriver: true
+                  }).start(),
+                ])
+              }else if(JSON.stringify(indwAnim)-0==2){
+                Animated.parallel([
+                  Animated.timing(open1, {
+                    toValue: -windowWidth+(JSON.stringify(slide)-20),
+                    duration: 0,
+                    useNativeDriver: true
+                  }).start(),
+                  Animated.timing(open2, {
+                    toValue: windowWidth-(windowWidth*20/100)-(JSON.stringify(slide)-20),
+                    duration: 0,
+                    useNativeDriver: true
+                  }).start(),
+                  Animated.timing(open3, {
+                    toValue: -windowWidth+(JSON.stringify(slide)-20),
+                    duration: 0,
+                    useNativeDriver: true
+                  }).start(),
+                ])
+              }
+            }else{if(JSON.stringify(indwAnim)-0==1){
+              open()
             }else if(JSON.stringify(indwAnim)-0==2){
-              Animated.parallel([
-                Animated.timing(open1, {
-                  toValue: -windowWidth+(JSON.stringify(slide)-0),
-                  duration: 0,
-                  useNativeDriver: true
-                }).start(),
-                Animated.timing(open2, {
-                  toValue: windowWidth-(windowWidth*20/100)-(JSON.stringify(slide)-0),
-                  duration: 0,
-                  useNativeDriver: true
-                }).start(),
-                Animated.timing(open3, {
-                  toValue: -windowWidth+(JSON.stringify(slide)-0),
-                  duration: 0,
-                  useNativeDriver: true
-                }).start(),
-              ])
-            } 
+              openwider()
+            }}   
           }
-          if(JSON.stringify(slide)-0<0 && JSON.stringify(indwAnim)-0==1){
+          if(JSON.stringify(indwAnim)-0==1 && (JSON.stringify(side)==0 || JSON.stringify(side)==2)){
+            if(JSON.stringify(slide)-0<-1){
+              side.setValue(2)
             Animated.parallel([
               Animated.timing(open1, {
                 toValue: -windowWidth+(windowWidth*15/100)+(JSON.stringify(slide)-0),
@@ -206,35 +217,40 @@ const chats = require('./chats.js')
                 useNativeDriver: true
               }).start(),
             ])
+            }else{
+              o2pen()
+            }
+            console.log(JSON.stringify(slide))
             
           }
           
         }
       },
-      onPanResponderRelease:(evt, gest)=>{
-        if(JSON.stringify(slide)-0>100){
+      onPanResponderEnd:(evt, gest)=>{
+        if(JSON.stringify(slide)-0>80){
           close()
+          side.setValue(0)
         }else if((JSON.stringify(slide)-0<40 && JSON.stringify(indwAnim)-0==2) || (JSON.stringify(slide)-0<-40 && JSON.stringify(indwAnim)-0==1)){
           openwider()
-        }else if((JSON.stringify(slide)-0>40 && JSON.stringify(indwAnim)-0==2) || (JSON.stringify(slide)-0>-40 && JSON.stringify(indwAnim)-0==1))(
+          side.setValue(0)
+        }else if((JSON.stringify(slide)-0>40 && JSON.stringify(indwAnim)-0==2) || (JSON.stringify(slide)-0>-40 && JSON.stringify(indwAnim)-0==1)){
           open()
-        )
-        
-        
+          side.setValue(0)
+        }
       }
     })
   ).current;
   const [indw, setindw] = useState(0)
   const [chat, setchat] = useState(0)
   const [bgcolor, setbgcolor] = useState('#b3d6b8')
-  const needclose = useRef(new Animated.Value(0)).current;
+  const [scroll, enablescroll] = useState(true)
   const open1 = useRef(new Animated.Value(0)).current;
   const open2 = useRef(new Animated.Value(0)).current;
   const open3 = useRef(new Animated.Value(0)).current;
   const open4 = useRef(new Animated.Value(0)).current;
   const slide = useRef(new Animated.Value(0)).current;
   const indwAnim = useRef(new Animated.Value(0)).current;
-  const scroll = useRef(new Animated.Value(0)).current;
+  const side = useRef(new Animated.Value(0)).current;
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
   
@@ -274,9 +290,9 @@ const renderItem = ({ item }) => (
 );
 
 const Item2 = ({ item }) => (
-  <TouchableOpacity  style={styles.item} >
+    <View  style={selectStyle(item)} >
     <Text style={styles.label}>{item.msg} </Text>
-  </TouchableOpacity >
+    </View >
 );
 
 const renderItem2 = ({ item }) => (
@@ -288,10 +304,22 @@ openchat=(chatid)=>{
   open()
 }
 
+selectStyle = (item) => {
+  if(item.userid == 1){
+    return(styles.mymsg)
+  }else{
+    return(styles.msg)
+  }}
+
 open=()=>{
   setindw(1)
   indwAnim.setValue(1)
   changewidth()
+}
+o2pen=()=>{
+  setindw(1)
+  indwAnim.setValue(1)
+  changewidth3()
 }
 close=()=>{
   setindw(0)
@@ -324,6 +352,32 @@ const changewidth = () =>{
     Animated.timing(open4, {
       toValue: windowWidth-(windowWidth*20/100),
       duration: 100,
+      useNativeDriver: true
+    }).start(),
+  ])
+  setbgcolor('#213144')
+}
+
+const changewidth3 = () =>{
+  Animated.parallel([
+    Animated.timing(open1, {
+      toValue: -windowWidth+(windowWidth*15/100),
+      duration: 0,
+      useNativeDriver: true
+    }).start(),
+    Animated.timing(open2, {
+      toValue: windowWidth-(windowWidth*20/100),
+      duration: 0,
+      useNativeDriver: true
+    }).start(),
+    Animated.timing(open3, {
+      toValue: -windowWidth+(windowWidth*15/100),
+      duration: 0,
+      useNativeDriver: true
+    }).start(),
+    Animated.timing(open4, {
+      toValue: windowWidth-(windowWidth*20/100),
+      duration: 0,
       useNativeDriver: true
     }).start(),
   ])
@@ -401,7 +455,7 @@ const itemwidth = {
 }
 const itemwidth2 = {
   transform: [{ translateX: open3 }],
-  width: windowWidth-(windowWidth*15/100),
+  width: '85%',
   
 }
 const itemwidth3 = {
@@ -425,28 +479,25 @@ return (
       <View style = {styles.container2}>
       <Animated.View style={[styles.container1, itemwidth, {backgroundColor: bgcolor}]}>
         <FlashList
-        
         data={data}
         renderItem={renderItem}
         keyExtractor={item => item.id}
         onEndReached={addobject}
         onEndReachedThreshold={3}
         estimatedItemSize={20}
-        // style = {styles.flatlist}
         />
       </Animated.View>
       <Animated.View style={[styles.sider, itemwidth2]}
       {...panResponder.panHandlers}
       >
-        <FlashList
-        
+        <FlatList
         data={chats[chat]}
         renderItem={renderItem2}
         keyExtractor={item => item.id}
         // onEndReached={}
         onEndReachedThreshold={3}
         estimatedItemSize={20}
-        // style = {styles.flatlist}
+        // scrollEnabled={scroll}
         />
       </Animated.View>
 
@@ -482,12 +533,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#2d425f',
     alignItems: 'stretch',
     flexDirection: 'row',
-    minHeight: '5%',
+    height: '5%',
     alignItems: 'flex-end',
   },
   sider: {
     backgroundColor: '#213144',
-    height:'100%',
+    height:'95%',
   },
   label: {
     flex:1,
@@ -507,6 +558,30 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     minHeight: 64,
     flexDirection: 'row-reverse',
+
+},
+mymsg: {
+  backgroundColor: 'green',
+  marginTop: 1,
+  marginBottom: 1,
+  marginLeft: 3,
+  marginRight: 6,
+  padding: 0,
+  borderRadius: 5,
+  minHeight: 64,
+  alignSelf: 'flex-end',
+
+},
+msg: {
+  backgroundColor: 'blue',
+  marginTop: 1,
+  marginBottom: 1,
+  marginLeft: 3,
+  marginRight: 6,
+  padding: 0,
+  borderRadius: 5,
+  minHeight: 64,
+  alignSelf: 'flex-start',
 
 },
   labelheader: {
