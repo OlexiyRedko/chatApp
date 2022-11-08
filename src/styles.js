@@ -17,6 +17,8 @@ const styles = StyleSheet.create({
       padding:2,
       margin:5,
       borderRadius: 5,
+      color: 'black',
+      
     },
     flatlist:{
       height:'100%',
@@ -67,6 +69,7 @@ const styles = StyleSheet.create({
   
   },
     label: {
+      
       fontSize: 18,
       color: 'black',
       maxWidth: "85%",
@@ -76,11 +79,13 @@ const styles = StyleSheet.create({
       //backgroundColor: 'pink',
     },
     messagetext: {
+      backgroundColor: 'white',
+      borderRadius: 5,
       fontSize: 18,
       color: 'black',
-      maxWidth: windowWidth*80/100 - 35,
-      marginTop: 5,
-      marginLeft: 5,
+      maxWidth: '80%',
+      paddingLeft: '1%',
+      paddingRight: '1%',
       // flex: 1,
       // alignSelf: 'flex-end'
       //backgroundColor: 'pink',
@@ -88,41 +93,56 @@ const styles = StyleSheet.create({
     
   mymsg: {
     flex: 1,
-    backgroundColor: 'green',
+    backgroundColor: '',
     marginTop: 1,
     marginBottom: 1,
     marginLeft: 3,
     marginRight: 6,
     padding: 0,
     borderRadius: 5,
-    minHeight: 40,
+    minHeight: 30,
     maxWidth: windowWidth*80/100,
     alignSelf: 'flex-end',
-    flexDirection: 'row-reverse',
-    
-  
   },
   msg: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '',
     marginTop: 1,
     marginBottom: 1,
     marginLeft: 3,
     marginRight: 6,
     padding: 0,
     borderRadius: 5,
-    minHeight: 40,
+    minHeight: 30,
+    maxWidth: windowWidth*80/100,
+    alignSelf: 'flex-start',
+  
+  },
+  mymsgcontainer: {
+    flex: 1,
+    backgroundColor: '',
+    padding: 0,
+    borderRadius: 5,
+    maxWidth: windowWidth*80/100,
+    alignSelf: 'flex-end',
+    flexDirection: 'row-reverse',
+  },
+  msgcontainer: {
+    flex: 1,
+    backgroundColor: '',
+    padding: 0,
+    borderRadius: 5,
     maxWidth: windowWidth*80/100,
     alignSelf: 'flex-start',
     flexDirection: 'row',
   
   },
   userimage: {
-    height: 20,
-    width: 20,
+    height: 30,
+    width: 30,
     borderRadius: 5,
-    marginTop: 5,
-    marginBottom: 5,
+    // marginTop: 5,
+    // marginBottom: 5,
     marginLeft: 5,
     marginRight: 5,
     borderWidth: 1,
