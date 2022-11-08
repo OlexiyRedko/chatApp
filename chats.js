@@ -4,12 +4,12 @@ const chats = [
             id:1,
             userid:1,
             msg:"hello"
-        },
+        }, 
         {
             id:2,
             userid:2,
             msg:"hi"
-        },
+        }, 
         {
             id:3,
             userid:1,
@@ -99,7 +99,7 @@ const chats = [
             id:20,
             userid:1,
             msg:"ill text them"
-        },
+        },  
     ],
     [
         {
@@ -128,6 +128,131 @@ const chats = [
             msg:"are you on party tommorow?"
         },
     ],
+    [
+        {
+            id:1,
+            userid:1,
+            msg:"hello"
+        }, 
+    ],
+    [
+        {
+            id:1,
+            userid:1,
+            msg:"hello"
+        }, 
+    ],
+    [
+        {
+            id:1,
+            userid:1,
+            msg:"hello"
+        }, 
+    ],
+    [
+        {
+            id:1,
+            userid:1,
+            msg:"hello"
+        }, 
+    ],
+    [
+        {
+            id:1,
+            userid:1,
+            msg:"hello"
+        }, 
+    ],
+    [
+        {
+            id:1,
+            userid:1,
+            msg:"hello"
+        }, 
+    ],
+    [
+        {
+            id:1,
+            userid:1,
+            msg:"hello"
+        }, 
+    ],
+    [
+        {
+            id:1,
+            userid:1,
+            msg:"hello"
+        }, 
+    ],
+    [
+        {
+            id:1,
+            userid:1,
+            msg:"hello"
+        }, 
+    ],
+    [
+        {
+            id:1,
+            userid:1,
+            msg:"hello"
+        }, 
+    ],
+    [
+        {
+            id:1,
+            userid:1,
+            msg:"hello"
+        }, 
+    ],
+    [
+        {
+            id:1,
+            userid:1,
+            msg:"hello"
+        }, 
+    ],
+    [
+        {
+            id:1,
+            userid:1,
+            msg:"hello"
+        }, 
+    ],
+    [
+        {
+            id:1,
+            userid:1,
+            msg:"hello"
+        }, 
+    ],
+    [
+        {
+            id:1,
+            userid:1,
+            msg:"hello"
+        }, 
+    ],
+    [
+        {
+            id:1,
+            userid:1,
+            msg:"hello"
+        }, 
+    ],
+    [
+        {
+            id:1,
+            userid:1,
+            msg:"hello"
+        }, 
+    ],
+    [
+        {
+            id:1,
+            userid:1,
+            msg:"hello"
+        }, 
+    ],
 ]
-
 module.exports = chats

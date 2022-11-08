@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState} from 'react';
-import {  StyleSheet, Text, View, Button, PermissionsAndroid, FlatList, Image, TouchableOpacity, SafeAreaView, Animated, Dimensions, BackHandler, PanResponder} from 'react-native';
+import { Keyboard, StyleSheet, Text, View, Button, PermissionsAndroid, FlatList, Image, TouchableOpacity, SafeAreaView, Animated, Dimensions, BackHandler, PanResponder, TextInput} from 'react-native';
 PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
 PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
 PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION)
@@ -8,6 +8,10 @@ import Geolocation from '@react-native-community/geolocation';
 import { FlashList } from '@shopify/flash-list';
 import xtype from 'xtypejs'
 const chats = require('./chats.js')
+const users = require('./users.js')
+const styles = require('./styles.js')
+let chattexts = [{text:""},]
+
 
 // Geolocation.setRNConfiguration({
 //     skipPermissionRequests: false,
@@ -25,11 +29,13 @@ const chats = require('./chats.js')
   const backAction = () => {
     
     if(indw==1){
-      changewidthback()
+      closemsg()
       setindw(0)
     }else if(indw==2){
-      changewidth()
-      setindw(1)
+      // openmid()
+      // setindw(1)
+      closemsg()
+      setindw(0)
     }else{
       BackHandler.exitApp()
     }
@@ -41,9 +47,16 @@ const chats = require('./chats.js')
       "hardwareBackPress",
       backAction
     );
-    return () => backHandler.remove();
   });
   
+  useEffect(() => {
+    const keyboardHide = Keyboard.addListener('keyboardDidHide', () => {
+        inputref.blur();
+    });
+    return () => {
+        keyboardHide.remove()
+    }
+}, []);
 
   const [data, setdata] = useState([
     {
@@ -142,37 +155,40 @@ const chats = require('./chats.js')
   const panResponder = useRef(
     
     PanResponder.create({
-      onMoveShouldSetPanResponder: (evt, gest) => gest.dx,
-      onMoveShouldSetPanResponderCapture: (evt, gest) => gest.dx,
+      onMoveShouldSetPanResponder: (evt, gest) => {if(gest.dx<-20 || gest.dx>20){return(true)}},
+      // onMoveShouldSetPanResponderCapture: (evt, gest) => {if(gest.dx<-40 || gest.dx>40){return(true)}},
       onPanResponderMove:(evt, gest)=>{
         const activetouches = evt.nativeEvent.changedTouches.length;
         if (activetouches === 1){
+          
 
           if(JSON.stringify(gest.dx)-0>290){
             slide.setValue( 290)
-          }else if(JSON.stringify(gest.dx)-0<-90){
-            slide.setValue( -90)
+          }else if(JSON.stringify(gest.dx)-0<-50){
+            slide.setValue( -50)
           }else{
             slide.setValue(JSON.stringify(gest.dx)-0)
           }
-          
+          if(JSON.stringify(side)==1 && JSON.stringify(slide)-0<0){
+            slide.setValue(0)
+          }
           if(JSON.stringify(side)==0 || JSON.stringify(side)==1){
-            if(JSON.stringify(slide)-0>20){
+            if(JSON.stringify(slide)-0>=0){
               side.setValue(1)
               if(JSON.stringify(indwAnim)-0==1){
                 Animated.parallel([
                   Animated.timing(open1, {
-                    toValue: -windowWidth+(windowWidth*15/100)+(JSON.stringify(slide)-20),
+                    toValue: -windowWidth+(windowWidth*15/100)+(JSON.stringify(slide)-0),
                     duration: 0,
                     useNativeDriver: true
                   }).start(),
                   Animated.timing(open2, {
-                    toValue: windowWidth-(windowWidth*20/100)-(JSON.stringify(slide)-20),
+                    toValue: windowWidth-(windowWidth*20/100)-(JSON.stringify(slide)-0),
                     duration: 0,
                     useNativeDriver: true
                   }).start(),
                   Animated.timing(open3, {
-                    toValue: -windowWidth+(windowWidth*15/100)+(JSON.stringify(slide)-20),
+                    toValue: -windowWidth+(windowWidth*15/100)+(JSON.stringify(slide)-0),
                     duration: 0,
                     useNativeDriver: true
                   }).start(),
@@ -180,27 +196,23 @@ const chats = require('./chats.js')
               }else if(JSON.stringify(indwAnim)-0==2){
                 Animated.parallel([
                   Animated.timing(open1, {
-                    toValue: -windowWidth+(JSON.stringify(slide)-20),
+                    toValue: -windowWidth+(JSON.stringify(slide)-0),
                     duration: 0,
                     useNativeDriver: true
                   }).start(),
                   Animated.timing(open2, {
-                    toValue: windowWidth-(windowWidth*20/100)-(JSON.stringify(slide)-20),
+                    toValue: windowWidth-(windowWidth*20/100)-(JSON.stringify(slide)-0),
                     duration: 0,
                     useNativeDriver: true
                   }).start(),
                   Animated.timing(open3, {
-                    toValue: -windowWidth+(JSON.stringify(slide)-20),
+                    toValue: -windowWidth+(JSON.stringify(slide)-0),
                     duration: 0,
                     useNativeDriver: true
                   }).start(),
                 ])
               }
-            }else{if(JSON.stringify(indwAnim)-0==1){
-              open()
-            }else if(JSON.stringify(indwAnim)-0==2){
-              openwider()
-            }}   
+            }  
           }
           if(JSON.stringify(indwAnim)-0==1 && (JSON.stringify(side)==0 || JSON.stringify(side)==2)){
             if(JSON.stringify(slide)-0<-1){
@@ -218,16 +230,13 @@ const chats = require('./chats.js')
               }).start(),
             ])
             }else{
-              o2pen()
-            }
-            console.log(JSON.stringify(slide))
-            
+              openfast()
+            } 
           }
-          
         }
       },
       onPanResponderEnd:(evt, gest)=>{
-        if(JSON.stringify(slide)-0>80){
+        if(JSON.stringify(slide)-0>90 && JSON.stringify(side)-0==1){
           close()
           side.setValue(0)
         }else if((JSON.stringify(slide)-0<40 && JSON.stringify(indwAnim)-0==2) || (JSON.stringify(slide)-0<-40 && JSON.stringify(indwAnim)-0==1)){
@@ -240,19 +249,30 @@ const chats = require('./chats.js')
       }
     })
   ).current;
+  const [rel, srel] = useState(0)
   const [indw, setindw] = useState(0)
   const [chat, setchat] = useState(0)
   const [bgcolor, setbgcolor] = useState('#b3d6b8')
-  const [scroll, enablescroll] = useState(true)
   const open1 = useRef(new Animated.Value(0)).current;
   const open2 = useRef(new Animated.Value(0)).current;
   const open3 = useRef(new Animated.Value(0)).current;
-  const open4 = useRef(new Animated.Value(0)).current;
   const slide = useRef(new Animated.Value(0)).current;
   const indwAnim = useRef(new Animated.Value(0)).current;
   const side = useRef(new Animated.Value(0)).current;
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
+  const open4 = useRef(new Animated.Value(windowWidth-(windowWidth*15/100))).current;
+  for(let i = chattexts.length; i<=data.length; i++){
+    chattexts.push({text:""})
+  }
+  const reloadw = () =>{
+    if(rel == 0){
+      srel(1)
+    }else{
+      srel(0)
+    }
+  }
+  
   
   
   
@@ -263,19 +283,22 @@ const chats = require('./chats.js')
         id: data.length+i,
         title: data.length+i + ' Item',
       })
+      chats.push([
+        {
+            id:1,
+            userid:1,
+            msg:"hello, nice to meet you"
+        }, 
+      ])
     }
     setdata([...data,  ...array])
   }
-
-
-
-
 const nothing = ()=>{
 }
 
 
 const Item = ({ item }) => (
-  <TouchableOpacity  style={styles.item} onPress={() => openchat(item.id)}>
+  <TouchableOpacity  style={styles.item} onPress={() => openchat(item.id)} >
     <Text style={styles.label}numberOfLines={1} >{item.title} </Text>
     <Animated.View style={[styles.container3, itemwidth3]}>
     <Image source={item.img} style={styles.image1} resizeMode="stretch"></Image>
@@ -291,7 +314,8 @@ const renderItem = ({ item }) => (
 
 const Item2 = ({ item }) => (
     <View  style={selectStyle(item)} >
-    <Text style={styles.label}>{item.msg} </Text>
+      <Image source={require('./img/users/user1.jpg')} style={styles.userimage} resizeMode="stretch"></Image>
+      <Text style={styles.messagetext}>{item.msg} </Text>
     </View >
 );
 
@@ -299,8 +323,12 @@ const renderItem2 = ({ item }) => (
   <Item2 item={item} />
 );
 
-openchat=(chatid)=>{
+openchat=(chatid)=>
+{
   setchat(chatid-1)
+  for(let i = chattexts.length; i<=data.length; i++){
+    chattexts.push({text:""})
+  }
   open()
 }
 
@@ -312,27 +340,29 @@ selectStyle = (item) => {
   }}
 
 open=()=>{
+  
   setindw(1)
   indwAnim.setValue(1)
-  changewidth()
+  openmid()
 }
-o2pen=()=>{
+openfast=()=>{
   setindw(1)
   indwAnim.setValue(1)
-  changewidth3()
+  openmidfaster()
 }
 close=()=>{
+  Keyboard.dismiss()
   setindw(0)
   indwAnim.setValue(0)
-  changewidthback()
+  closemsg()
 }
 openwider=()=>{
   setindw(2)
   indwAnim.setValue(2)
-  changewidth2()
+  openfull()
 }
 
-const changewidth = () =>{
+const openmid = () =>{
   Animated.parallel([
     Animated.timing(open1, {
       toValue: -windowWidth+(windowWidth*15/100),
@@ -350,15 +380,15 @@ const changewidth = () =>{
       useNativeDriver: true
     }).start(),
     Animated.timing(open4, {
-      toValue: windowWidth-(windowWidth*20/100),
+      toValue: 0,
       duration: 100,
-      useNativeDriver: true
+      useNativeDriver: false
     }).start(),
   ])
   setbgcolor('#213144')
 }
 
-const changewidth3 = () =>{
+const openmidfaster = () =>{
   Animated.parallel([
     Animated.timing(open1, {
       toValue: -windowWidth+(windowWidth*15/100),
@@ -376,15 +406,15 @@ const changewidth3 = () =>{
       useNativeDriver: true
     }).start(),
     Animated.timing(open4, {
-      toValue: windowWidth-(windowWidth*20/100),
+      toValue: 0,
       duration: 0,
-      useNativeDriver: true
+      useNativeDriver: false
     }).start(),
   ])
   setbgcolor('#213144')
 }
 
-const changewidth2 = () =>{
+const openfull = () =>{
   Animated.parallel([
     Animated.timing(open1, {
       toValue: -windowWidth,
@@ -397,15 +427,18 @@ const changewidth2 = () =>{
       useNativeDriver: true
     }).start(),
     Animated.timing(open4, {
-      toValue: -windowWidth,
+      toValue: 1,
       duration: 100,
-      useNativeDriver: true
+      useNativeDriver: false
     }).start(),
   ])
+  
   setbgcolor('#213144')
 }
 
-const changewidthback = () =>{
+
+
+const closemsg = () =>{
   Animated.parallel([
     Animated.timing(open1, {
       toValue: 0,
@@ -419,11 +452,6 @@ const changewidthback = () =>{
     }).start(),
     Animated.timing(open3, {
       toValue: 0,
-      duration: 100,
-      useNativeDriver: true
-    }).start(),
-    Animated.timing(open4, {
-      toValue: windowWidth-(windowWidth*20/100),
       duration: 100,
       useNativeDriver: true
     }).start(),
@@ -432,42 +460,44 @@ const changewidthback = () =>{
   setbgcolor('#b3d6b8')
 }
 
-const progressAnim=0
-// progress.interpolate({
-//   inputRange:[0, 1],
-//   outputRange:[0, -windowWidth+(windowWidth*15/100)]
-// })
-const anotherWidth=0
-// progress.interpolate({
-//   inputRange:[0, 1],
-//   outputRange:[0, -windowWidth+(windowWidth*15/100)]
-// })
-const anotherWidth2=0
-// progress.interpolate({
-//   inputRange:[0, 1],
-//   outputRange:[0, windowWidth-(windowWidth*20/100)]
-// })
-
-const itemwidth = {
-  transform: [{ translateX: open1 }],
-  // width: progressAnim,
+const send = (chatid, msg) => {
+  if(msg != ""){
+    chats[chatid].push({
+    id: chats[chatid].length-0+1,
+    userid: 1,
+    msg: msg
+    })
+    reloadw()
+    chattexts[chat]['text'] = ""
+    inputref.clear();
+  }
   
 }
+
+const sliderwidth=open4.interpolate({
+  inputRange:[0, 1],
+  outputRange:[windowWidth-(windowWidth*15/100), windowWidth]
+})
+const itemwidth = {
+  transform: [{ translateX: open1 }], 
+}
 const itemwidth2 = {
-  transform: [{ translateX: open3 }],
-  width: '85%',
-  
+  transform: [{ translateX: open3}],
+}
+const itw = {
+  width: sliderwidth,
 }
 const itemwidth3 = {
   transform: [{ translateX: open2 }],
-  // width: anotherWidth,
-  
 }
+
+
 
   
 return (
-  <SafeAreaView style={styles.container} screenOptions={{headerTransparent: true}}>   
-      <View style={styles.header}>
+  <SafeAreaView style={[styles.container, {backgroundColor: bgcolor}]} screenOptions={{headerTransparent: true}}>   
+
+      <View style={[styles.header, ]}>
         <TouchableOpacity style={styles.button} onPress={close}>
           <Image source={require('./img/menu.png')} style={styles.image} resizeMode="stretch"></Image>
         </TouchableOpacity>
@@ -477,6 +507,7 @@ return (
         <Text style={styles.labelheader}>{indw}</Text>
       </View>
       <View style = {styles.container2}>
+
       <Animated.View style={[styles.container1, itemwidth, {backgroundColor: bgcolor}]}>
         <FlashList
         data={data}
@@ -485,22 +516,75 @@ return (
         onEndReached={addobject}
         onEndReachedThreshold={3}
         estimatedItemSize={20}
+        keyboardShouldPersistTaps='always' 
         />
       </Animated.View>
+
       <Animated.View style={[styles.sider, itemwidth2]}
       {...panResponder.panHandlers}
       >
-        <FlatList
-        data={chats[chat]}
+        <Animated.View style={[itw]}>
+
+        <View style={[styles.slidercontainer]}>
+
+        <View style={styles.bottom}>
+        <TouchableOpacity style={styles.buttonsend} onPress={() => {
+          if(chattexts[chat]){
+            send(chat, chattexts[chat]['text'])
+          }else{
+            for(let i=chattexts.length; i<=chat; i++){
+              chattexts.push({text:""})
+            }
+            send(chat, chattexts[chat]['text'])
+          }
+          
+          }}>
+          <Image source={require('./img/send.png')} style={styles.image} resizeMode="stretch"></Image>
+        </TouchableOpacity>
+          <TextInput
+            ref={(ref) => {inputref = ref}}
+           textAlignVertical ={'top'}
+           multiline ={true}
+           style={styles.input}
+           onChangeText = {(text)=>{
+            try{
+              chattexts[chat]['text']=text
+            }catch(err){
+              for(let i=chattexts.length; i<=chat; i++){
+                chattexts.push({text:""})
+              }
+              chattexts[chat]['text']=text
+            }
+            reloadw()
+          }}
+           placeholder = {'nothing still here'}
+           value = {chattexts[chat]['text']}
+           onPressOut={(e)=>{}}
+           />
+          
+
+        </View>
+
+        <View style={[{flex:1}]}>
+        <FlashList
+        ref={(ref) => {flatListRef = ref }}
+        data={JSON.parse(JSON.stringify(chats[chat])).reverse()}
         renderItem={renderItem2}
         keyExtractor={item => item.id}
         // onEndReached={}
         onEndReachedThreshold={3}
         estimatedItemSize={20}
+        inverted={true}
+        keyboardShouldPersistTaps='always' 
         // scrollEnabled={scroll}
+        
         />
-      </Animated.View>
+        </View>
+        
 
+        </View>
+        </Animated.View> 
+      </Animated.View>
       </View>
       
       
@@ -509,123 +593,7 @@ return (
 }
 
 
-const styles = StyleSheet.create({
-  flatlist:{
-    height:'100%',
-  },
-  container: {
-      flex: 1,
-      backgroundColor: '#b3d6b8',
-      alignItems: 'stretch',
-      justifyContent: 'flex-start',
-  },
-  container1: {
-    width: '100%',
-    height: '100%',
-  },
-  container2: {
-    flexDirection: 'row',
-    height: '100%',
-  },
-  conatiner3:{
-  },
-  header: {
-    backgroundColor: '#2d425f',
-    alignItems: 'stretch',
-    flexDirection: 'row',
-    height: '5%',
-    alignItems: 'flex-end',
-  },
-  sider: {
-    backgroundColor: '#213144',
-    height:'95%',
-  },
-  label: {
-    flex:1,
-    fontSize: 18,
-    color: 'black',
-    width: '75%',
-    marginTop: 5,
-    //backgroundColor: 'pink',
-  },
-  item: {
-    backgroundColor: 'white',
-    marginTop: 1,
-    marginBottom: 1,
-    marginLeft: 3,
-    marginRight: 6,
-    padding: 0,
-    borderRadius: 5,
-    minHeight: 64,
-    flexDirection: 'row-reverse',
 
-},
-mymsg: {
-  backgroundColor: 'green',
-  marginTop: 1,
-  marginBottom: 1,
-  marginLeft: 3,
-  marginRight: 6,
-  padding: 0,
-  borderRadius: 5,
-  minHeight: 64,
-  alignSelf: 'flex-end',
-
-},
-msg: {
-  backgroundColor: 'blue',
-  marginTop: 1,
-  marginBottom: 1,
-  marginLeft: 3,
-  marginRight: 6,
-  padding: 0,
-  borderRadius: 5,
-  minHeight: 64,
-  alignSelf: 'flex-start',
-
-},
-  labelheader: {
-    fontSize: 20,
-    color: 'white',
-    marginBottom: 4,
-    
-},
-  button: {
-    height: 18,
-    width: 30,
-    marginTop: 5,
-    marginBottom: 8,
-    marginLeft: '4%',
-    marginRight: '45%',
-
-},
-button2: {
-  height: 18,
-  width: 18,
-  marginTop: 5,
-  marginBottom: 8,
-  marginLeft: '0%',
-  marginRight: '4%',
-
-},
-image: {
-  width:'100%',
-  height: '100%',
-},
-image1: {
-  height: 60,
-  width: 60,
-  borderRadius: 5,
-  marginTop: 2,
-  marginBottom: 2,
-  marginLeft: 2,
-  marginRight: 5,
-  padding: 2,
-  borderWidth: 1,
-  borderColor: '#ffd400',
-},
-
-});
 
 
 
