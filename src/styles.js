@@ -36,13 +36,7 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       flex: 1
     },
-    header: {
-      backgroundColor: '#2d425f',
-      alignItems: 'stretch',
-      flexDirection: 'row',
-      alignItems: 'flex-end',
-      height: windowHeight*5/100
-    },
+    
     bottom: {
       backgroundColor: '#2d425f',
       alignItems: 'stretch',
@@ -147,12 +141,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
     borderWidth: 1,
   },
-    labelheader: {
-      fontSize: 20,
-      color: 'white',
-      marginBottom: 4,
-      
-  },
+    
     button: {
       height: 18,
       width: 30,
@@ -180,10 +169,7 @@ const styles = StyleSheet.create({
     marginRight: '6%',
   
   },
-  image: {
-    width:'100%',
-    height: '100%',
-  },
+  
   image1: {
     height: 60,
     width: 60,
@@ -196,6 +182,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ffd400',
   },
+  biocontainer:{
+    minHeight: 50,
+    margin:5,
+    padding: 5,
+    borderRadius: 5,
+    backgroundColor: '#6491aa',
+  }
   
   });
 

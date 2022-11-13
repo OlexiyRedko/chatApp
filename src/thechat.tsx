@@ -5,7 +5,7 @@ const styles = require('./styles.js');
 let chattexts = [{text:""},]
 
 
-function TheChat({ data, renderer, users, panResponder, chat, send, reloadw, position, width,}) {
+function TheChat({ data, renderer, users, panResponder, chat, send, reloadw, position, width, openprof, myUser}) {
     let listRef1
     let inputRef1
     useEffect(() => {
@@ -21,14 +21,14 @@ function TheChat({ data, renderer, users, panResponder, chat, send, reloadw, pos
         chattexts.push({text:""})
       }
     const selectStyle = (item) => {
-        if(item.userid == 1){
+        if(item.userid == myUser){
           return(styles.mymsg)
         }else{
           return(styles.msg)
         }}
       
       const selectStyle2 = (item) => {
-        if(item.userid == 1){
+        if(item.userid == myUser){
           return(styles.mymsgcontainer)
         }else{
           return(styles.msgcontainer)
@@ -41,7 +41,9 @@ function TheChat({ data, renderer, users, panResponder, chat, send, reloadw, pos
             
           </View>
           <View style={selectStyle2(item)} >
-            <Image source={users[item.userid-1]['img']} style={styles.userimage} resizeMode="stretch"></Image>
+              <TouchableOpacity onPress={() => openprof(item.userid)} >
+                <Image source={users[item.userid-1]['img']} style={styles.userimage} resizeMode="stretch"></Image>
+              </TouchableOpacity>
             <Text style={styles.messagetext}>{item.msg} </Text>
             <Text style={[{color: 'white', alignSelf:"flex-end", fontSize: 10, margin:5}]}>{item['time']} </Text>
           </View>
@@ -71,16 +73,12 @@ function TheChat({ data, renderer, users, panResponder, chat, send, reloadw, pos
         </View >
     );
     const renderItem2 = ({ item }) => {
-        if(item.userid == 1){
+        if(item.userid == myUser){
             return(<Item3 item={item} />)
           }else{
             if(item.small == true){ 
-                console.log('here1')
-                console.log(item.msg)
                 return(<Item4 item={item} />)
             }else{
-                console.log('here2')
-                console.log(item.msg)
                 return(<Item2 item={item} />)
             }
           }
@@ -105,7 +103,7 @@ function TheChat({ data, renderer, users, panResponder, chat, send, reloadw, pos
 
         <View style={[styles.slidercontainer]}>
 
-        <View style={styles.bottom}>
+        <View style={[styles.bottom]}>
         <TouchableOpacity style={styles.buttonsend} onPress={() => {
           if(chattexts[chat]){
             send(chat, chattexts[chat]['text'])

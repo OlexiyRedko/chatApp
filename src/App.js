@@ -1,5 +1,7 @@
-import React, { useEffect, useRef, useState} from 'react';
-import { Keyboard, StyleSheet, Text, View, Button, PermissionsAndroid, FlatList, Image, TouchableOpacity, SafeAreaView, Animated, Dimensions, BackHandler, PanResponder, TextInput} from 'react-native';
+import React, { useEffect, useRef, useState} from 'react'
+
+
+import { StatusBar, Keyboard, Text, View, Button, PermissionsAndroid,  TouchableOpacity, SafeAreaView, Animated, Dimensions, BackHandler, PanResponder, ScrollView,DrawerLayoutAndroid, Image} from 'react-native';
 PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
 PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
 PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION)
@@ -11,20 +13,36 @@ const listOfChats = require('./listOfChats.js')
 const chats = require('./chats.js')
 const users = require('./users.js')
 const styles = require('./styles.js')
-import Header from './header.tsx'
+import Header from './header'
 import Chatlist from './chatlist.tsx'
 import TheChat from './thechat';
-
+import NavigationView from './navigationView';
+import ProfileNavigation from './profileNavigsator';
 // Geolocation.setRNConfiguration({
 //     skipPermissionRequests: false,
 //     locationProvider:'auto'
 //   })
 
+
+
+
+
+
+
+
+
+
+
+
+
+
  const App = (props) => {
-  const imittime = '12:45'
   const backAction = () => {
-    
-    if(indw==1){
+    if(drawerstate==1){
+      closeDrawer()
+    }else if(drawerstate2==1){
+      closeDrawer2()
+    }else if(indw==1){
       closemsg()
       setindw(0)
     }else if(indw==2){
@@ -140,8 +158,12 @@ import TheChat from './thechat';
     })
   ).current;
   const [rel, srel] = useState(0)
+  const [trlucent, setTrlucent] = useState(true)
+  const [infobg, setInfobg] = useState('#2d425f')
   const [indw, setindw] = useState(0)
+  const [indp, setindp] = useState(0)
   const [chat, setchat] = useState(0)
+  const [renderingUser, setRUser] = useState(0)
   const [bgcolor, setbgcolor] = useState('#b3d6b8')
   const open1 = useRef(new Animated.Value(0)).current;
   const open2 = useRef(new Animated.Value(0)).current;
@@ -152,7 +174,40 @@ import TheChat from './thechat';
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
   const open4 = useRef(new Animated.Value(windowWidth-(windowWidth*15/100))).current;
-  
+  const pMove = useRef(new Animated.Value(-windowHeight+50)).current;
+  const pHeight = useRef(new Animated.Value(0)).current;
+  const [myUserId, setUserId] = useState(1)
+  const [drawerstate, setDrawerState] = useState(0)
+  const [drawerstate2, setDrawer2State] = useState(0)
+  let drawer
+  let drawer2
+  let statusbar
+  const openDrawer =()=>{
+    drawer.openDrawer()
+    setDrawerState(1)
+  }
+  const closeDrawer =()=>{
+    drawer.closeDrawer()
+    setDrawerState(0)
+  }
+  const openDrawer2 =()=>{
+    drawer2.openDrawer()
+    setDrawer2State(1)
+  }
+  const closeDrawer2 =()=>{
+    drawer2.closeDrawer()
+    setDrawer2State(0)
+  }
+
+  const buttonback = () =>{
+    if(indp==1){
+      openprofile()
+    }else if(indw==0){
+      openDrawer()
+    }else{
+      close()
+    }
+  }
   const reloadw = () =>{
     if(rel == 0){
       srel(1)
@@ -300,20 +355,26 @@ import TheChat from './thechat';
   }
   const send = (chatid, msg) => {
     if(msg != ""){
-      if(chats[chatid][chats[chatid].length-1].userid == 1 && chats[chatid][chats[chatid].length-1].time == imittime){
+      if(chats[chatid][chats[chatid].length-1].userid == myUserId && chats[chatid][chats[chatid].length-1].time == (new Date().getHours() +':'+new Date().getMinutes())){
         chats[chatid].push({
           id: chats[chatid].length-0+1,
-          userid: 1,
+          userid: myUserId,
           msg: msg,
-          time:imittime,
-          small:true
+          small:true,
+          time: (new Date().getHours() +':'+new Date().getMinutes()),
+          date: new Date().getDate(),
+          month: new Date().getMonth(),
+          year: new Date().getFullYear()
           })
       }else{
         chats[chatid].push({
           id: chats[chatid].length-0+1,
-          userid: 1,
+          userid: myUserId,
           msg: msg,
-          time:imittime
+          time: (new Date().getHours() +':'+new Date().getMinutes()),
+          date: new Date().getDate(),
+          month: new Date().getMonth(),
+          year: new Date().getFullYear()
           })
       }
       
@@ -324,23 +385,97 @@ import TheChat from './thechat';
     inputRange:[0, 1],
     outputRange:[windowWidth-(windowWidth*15/100), windowWidth]
   })
+
+
+  const openprofile = (userid) =>{
+    if(drawerstate2==1){
+      setInfobg('#2d425f')
+      closeDrawer2()
+    }else{
+      setRUser(userid-1)
+      setInfobg('transparent')
+      openDrawer2()
+    }
+    
+  }
+
+  const pHeight2 = pHeight.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0%', '100%']
+  })
+  const profileHeight = {
+    transform: [{ translateY: pMove }],
+  }
+  const profileHeight2 = {
+    height: pHeight2,
+  }
+
+
+  const navigationView = () => (
+    <NavigationView closeNavi={closeDrawer}/>
+  );
+  const navigationView2 = () => (
+    <ProfileNavigation closeNavi={closeDrawer2} users={users} renderingUser={renderingUser}/>
+  );
+
   return (
-    <SafeAreaView style={[styles.container, {backgroundColor: bgcolor}]} screenOptions={{headerTransparent: true}}>   
-        <Header text = {indw} button1={close} button2={open}/>
-        <View style = {styles.container2}>
-        <Chatlist bgColor={bgcolor} width={open1} position={open2} data={data} renderer={addobject} opener={openchat} />
-        <TheChat
-        data ={JSON.parse(JSON.stringify(chats[chat])).reverse()}
-        inputRef = {(ref) => {inputref = ref}}
-        users = {users}
-        panResponder ={panResponder}
-        chat = {chat} 
-        send = {send}
-        reloadw = {reloadw} 
-        position = {open3} 
-        width = {sliderwidth}/>
-        </View>
-  </SafeAreaView>
+    
+    <View style={[styles.container, {backgroundColor: bgcolor}]} >
+      <StatusBar
+        
+        backgroundColor={'transparent'} 
+        translucent={true}/>
+      <DrawerLayoutAndroid
+                      ref={(ref) => {drawer2 = ref}}
+                      drawerWidth={windowWidth}
+                      drawerPosition={'right'}
+                      renderNavigationView={navigationView2}
+                      onDrawerClose={()=>setDrawer2State(0)}
+                      onDrawerOpen={()=>setDrawer2State(1)}
+                    > 
+      
+        
+      <DrawerLayoutAndroid
+      ref={(ref) => {drawer = ref}}
+      drawerWidth={300}
+      drawerPosition={'left'}
+      renderNavigationView={navigationView}
+      onDrawerClose={()=>setDrawerState(0)}
+      onDrawerOpen={()=>setDrawerState(1)}
+    >
+      <View style = {[styles.container,{flexDirection: 'column-reverse',}]}>
+        <View style = {[styles.container2,{flexDirection: 'column-reverse',}]}>
+                <View style = {[styles.container2, {transform: [{ translateY: 0 }],}]}>
+
+                      <Chatlist bgColor={bgcolor} width={open1} position={open2} data={data} renderer={addobject} opener={openchat} />
+                      
+                      <TheChat
+                      data ={JSON.parse(JSON.stringify(chats[chat])).reverse()}
+                      inputRef = {(ref) => {inputref = ref}}
+                      users = {users}
+                      panResponder ={panResponder}
+                      chat = {chat} 
+                      send = {send}
+                      reloadw = {reloadw} 
+                      position = {open3} 
+                      width = {sliderwidth}
+                      openprof = {openprofile}
+                      myUser = {myUserId}/>
+                         
+                </View>
+                
+
+
+          </View>
+          <Header indw = {indw} button1={buttonback} button2={nothing} indp={indp} drawer={drawerstate}/>
+      </View>  
+          </DrawerLayoutAndroid>
+          
+      </DrawerLayoutAndroid>
+        
+        
+  </View>
+  
   );
 }
 
