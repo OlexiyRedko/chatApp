@@ -37,14 +37,14 @@ function TheChat({ data, renderer, users, panResponder, chat, send, reloadw, pos
     const Item2 = ({ item }) => (
         <View  style={selectStyle(item)} >
           <View style = {[{flexDirection: 'row'}]}>
-            <Text style={[{color: 'white',}]}>{users[item.userid-1]['name']} </Text>
+            <Text style={[{color: 'white', fontWeight: 'bold',}]}>{users[item.userid-1]['name']} </Text>
             
           </View>
           <View style={selectStyle2(item)} >
               <TouchableOpacity onPress={() => openprof(item.userid)} >
                 <Image source={users[item.userid-1]['img']} style={styles.userimage} resizeMode="stretch"></Image>
               </TouchableOpacity>
-            <Text style={styles.messagetext}>{item.msg} </Text>
+            <Text style={[styles.messagetext]}>{item.msg} </Text>
             <Text style={[{color: 'white', alignSelf:"flex-end", fontSize: 10, margin:5}]}>{item['time']} </Text>
           </View>
         </View >
@@ -117,7 +117,7 @@ function TheChat({ data, renderer, users, panResponder, chat, send, reloadw, pos
           inputRef1.clear();
           
           }}>
-          <Image source={require('./img/send.png')} style={styles.image} resizeMode="stretch"></Image>
+          <Image source={require('./img/send.png')} style={[{width:'100%', height:'100%'}]} resizeMode="stretch"></Image>
         </TouchableOpacity>
           <TextInput
             ref={(ref) => {inputRef1 = ref}}

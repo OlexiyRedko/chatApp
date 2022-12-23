@@ -1,39 +1,51 @@
 import React, { useEffect, useRef, useState} from 'react';
-import { Text, View,Image, TouchableOpacity, Button, ScrollView, Animated} from 'react-native';
+import { Text, View,Image, TouchableOpacity, ScrollView, ImageBackground,} from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import Header from './header';
 const styles = require('./styles.js');
 
 
 function ProfileNavigation({closeNavi, users, renderingUser}) {
 
+  const tags = users[renderingUser]['tags'].map(item=> (
+    <TouchableOpacity key={item}>
+      <Text style={styles.biotag}>
+      {item}
+      </Text>
+      
+      </TouchableOpacity>
+  ))
+
     return(
-        <View style={[{height:'100%'}]}>
-                <View style = {[{backgroundColor:'pink', alignSelf:'center', flex:1}, {}]}>
-                      <ScrollView style = {[{flex:1, backgroundColor:'#2d425f'}]}>
-                      <View style = {[{height:350, backgroundColor:'blue'}]}>
+        <View style={[{height:'100%', width:'100%'}]}>
+                <ScrollView style = {[{flex:1, backgroundColor:'#2d425f'}]}>
+                            <ImageBackground source={users[renderingUser]["img"]} style={[{height:350}]} resizeMode='cover'>
+                                      <LinearGradient colors={['#2d425f60','#2d425f64','transparent']} style = {[{}]}>
+                                      <Header button1={closeNavi} style={[{transform: [{ translateY: -0 }]}]} color='transparent'></Header>
+                                      </LinearGradient>
 
-                        <Image source={users[renderingUser]["img"]} style={[{height:350}]} resizeMode='cover'></Image>
 
-                          <Animated.View style = {[{minHeight:40, margin:5, padding:5, transform: [{ translateY: -50 }],}]}>
-                          <Text style = {[{color:'white', fontSize:25}]}>{users[renderingUser]["name"]}</Text>
-                          </Animated.View>
-                      </View>
+                                      <View style={[{flex:1}]}></View>
+                                      <LinearGradient colors={['transparent','#2d425f64','#2d425f60']} style = {[{minHeight:60, padding:5}]}>
+                                      <Text style = {[{color:'white', fontSize:25, fontWeight: 'bold',}]}>{users[renderingUser]["name"]}</Text>
+                                      </LinearGradient>
+
+
+                            </ImageBackground>
+                        <View style = {[{flex:1, flexDirection:'row', flexWrap: "wrap",}]}>
+                          {tags}                            
+
+                        </View>
                         
                         <View style = {[styles.biocontainer]}>
-                          <Text style = {[{color:'black', fontSize:18}]}>bio: there is some bio</Text>
+                          <Text style = {[{color:'#6491aa', fontSize:18}]}>bio: there is some bio</Text>
                         </View>
 
                         <View style = {[styles.biocontainer]}>
-                          <Text style = {[{color:'black', fontSize:18}]}>phonenumber: +380683231569</Text>
+                          <Text style = {[{color:'#6491aa', fontSize:18}]}>phonenumber: +380683231569</Text>
                         </View>
-                        <Text style={styles.paragraph}>I'm in the Drawer!</Text>
-                        <Button
-                          title="Close drawer"
-                          onPress={closeNavi}
-                        />
                         
                       </ScrollView>
-                          
-                  </View>
                       
     </View>
     )

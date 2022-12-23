@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     marginLeft: 2,
     marginRight: 5,
     padding: 2,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: '#ffd400',
   },
   biocontainer:{
@@ -187,7 +187,19 @@ const styles = StyleSheet.create({
     margin:5,
     padding: 5,
     borderRadius: 5,
-    backgroundColor: '#6491aa',
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: '#6491aa',
+  },
+  biotag:{
+    color:'#6491aa',  
+    borderWidth: 2, 
+    borderColor: '#6491aa',
+    margin:5,
+    paddingLeft:3,
+    paddingRight:3,
+    borderRadius: 5,
+    
   }
   
   });

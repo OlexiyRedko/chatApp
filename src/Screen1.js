@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState} from 'react'
-
-
-import { StatusBar, Keyboard, Text, View, Button, PermissionsAndroid,  TouchableOpacity, SafeAreaView, Animated, Dimensions, BackHandler, PanResponder, ScrollView,DrawerLayoutAndroid, Image} from 'react-native';
+import { StatusBar, Keyboard, Text, View, Button, PermissionsAndroid,  TouchableOpacity, SafeAreaView, Animated, Dimensions, BackHandler, PanResponder, ScrollView, Image, DrawerLayoutAndroid} from 'react-native';
+import DrawerLayout from 'react-native-gesture-handler/DrawerLayout';
 PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
 PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
 PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION)
@@ -18,6 +17,7 @@ import Chatlist from './chatlist.tsx'
 import TheChat from './thechat';
 import NavigationView from './navigationView';
 import ProfileNavigation from './profileNavigsator';
+import { connect2, singin } from './connections';
 // Geolocation.setRNConfiguration({
 //     skipPermissionRequests: false,
 //     locationProvider:'auto'
@@ -36,7 +36,8 @@ import ProfileNavigation from './profileNavigsator';
 
 
 
- const App = (props) => {
+ const Scr1 = (user) => {
+  
   const backAction = () => {
     if(drawerstate==1){
       closeDrawer()
@@ -158,7 +159,6 @@ import ProfileNavigation from './profileNavigsator';
     })
   ).current;
   const [rel, srel] = useState(0)
-  const [trlucent, setTrlucent] = useState(true)
   const [infobg, setInfobg] = useState('#2d425f')
   const [indw, setindw] = useState(0)
   const [indp, setindp] = useState(0)
@@ -179,9 +179,11 @@ import ProfileNavigation from './profileNavigsator';
   const [myUserId, setUserId] = useState(1)
   const [drawerstate, setDrawerState] = useState(0)
   const [drawerstate2, setDrawer2State] = useState(0)
+  const [resp, setresp] = useState("")
   let drawer
   let drawer2
-  let statusbar
+  let imgheader
+  if(indw==0){imgheader=require('./img/menu.png')}
   const openDrawer =()=>{
     drawer.openDrawer()
     setDrawerState(1)
@@ -193,10 +195,12 @@ import ProfileNavigation from './profileNavigsator';
   const openDrawer2 =()=>{
     drawer2.openDrawer()
     setDrawer2State(1)
+    dr2=1
   }
   const closeDrawer2 =()=>{
     drawer2.closeDrawer()
     setDrawer2State(0)
+    dr2=0
   }
 
   const buttonback = () =>{
@@ -412,7 +416,7 @@ import ProfileNavigation from './profileNavigsator';
 
 
   const navigationView = () => (
-    <NavigationView closeNavi={closeDrawer}/>
+    <NavigationView closeNavi={closeDrawer} userid={myUserId} profileFunction={() =>{closeDrawer(); openprofile(myUserId)}}/>
   );
   const navigationView2 = () => (
     <ProfileNavigation closeNavi={closeDrawer2} users={users} renderingUser={renderingUser}/>
@@ -430,8 +434,10 @@ import ProfileNavigation from './profileNavigsator';
                       drawerWidth={windowWidth}
                       drawerPosition={'right'}
                       renderNavigationView={navigationView2}
-                      onDrawerClose={()=>setDrawer2State(0)}
-                      onDrawerOpen={()=>setDrawer2State(1)}
+                      onDrawerClose={()=>{setDrawer2State(0)}}
+                      onDrawerOpen={()=>{setDrawer2State(1)}}
+                      keyboardDismissMode='on-drag'
+                      drawerLockMode={'locked-open'}
                     > 
       
         
@@ -442,6 +448,7 @@ import ProfileNavigation from './profileNavigsator';
       renderNavigationView={navigationView}
       onDrawerClose={()=>setDrawerState(0)}
       onDrawerOpen={()=>setDrawerState(1)}
+      
     >
       <View style = {[styles.container,{flexDirection: 'column-reverse',}]}>
         <View style = {[styles.container2,{flexDirection: 'column-reverse',}]}>
@@ -467,7 +474,21 @@ import ProfileNavigation from './profileNavigsator';
 
 
           </View>
-          <Header indw = {indw} button1={buttonback} button2={nothing} indp={indp} drawer={drawerstate}/>
+          <Header button1={buttonback} img={imgheader}>
+              <View style={[{flex:1}]}></View>
+              <TouchableOpacity style={[{ marginTop: 5,
+                                          marginBottom: 8,
+                                          height:20,
+                                          marginLeft:'5%',
+                                          marginRight:'5%',}]} 
+                                          onPress={()=>{
+                                            connect2()
+                                            // setresp('0')
+                                            }}>
+              <Image source={require('./img/search.png')} style={[{height:'100%', width:40}]} resizeMode="contain"></Image>
+              </TouchableOpacity>
+              <Text>{user}</Text>
+          </Header>
       </View>  
           </DrawerLayoutAndroid>
           
@@ -484,7 +505,7 @@ import ProfileNavigation from './profileNavigsator';
 
 
 
-export default App;
+export default Scr1;
 
 
 //   gotLocation = (info)=>{
@@ -516,18 +537,7 @@ export default App;
 
 // noConectionError = () =>{this.setState({response:"NoConectionError"})}
 
-  // connect = async () =>{
-  //   const URL = "http://46.219.35.254:3000/get"
-  //   try{
-  //     const response = await fetch(URL);
-  //     if(response.status != 200){this.noConectionError()}
-  //     const responseText = await response.text();
-  //     this.setState({response:responseText})
-  //   }catch(err){
-  //     this.setState({response:err.toString()})
-  //     console.log(err)
-  //   }
-  // }
+  
 
   // sendData = async () =>{
   //   if(!this.state.latitude==0 && !this.state.longitude==0){
