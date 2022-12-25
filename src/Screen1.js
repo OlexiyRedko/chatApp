@@ -17,7 +17,7 @@ import Chatlist from './chatlist.tsx'
 import TheChat from './thechat';
 import NavigationView from './navigationView';
 import ProfileNavigation from './profileNavigsator';
-import { connect2, singin } from './connections';
+import { delete_token} from './connections';
 // Geolocation.setRNConfiguration({
 //     skipPermissionRequests: false,
 //     locationProvider:'auto'
@@ -36,7 +36,7 @@ import { connect2, singin } from './connections';
 
 
 
- const Scr1 = (user) => {
+ const Scr1 = (user, setUser) => {
   
   const backAction = () => {
     if(drawerstate==1){
@@ -391,6 +391,7 @@ import { connect2, singin } from './connections';
   })
 
 
+
   const openprofile = (userid) =>{
     if(drawerstate2==1){
       setInfobg('#2d425f')
@@ -416,7 +417,7 @@ import { connect2, singin } from './connections';
 
 
   const navigationView = () => (
-    <NavigationView closeNavi={closeDrawer} userid={myUserId} profileFunction={() =>{closeDrawer(); openprofile(myUserId)}}/>
+    <NavigationView closeNavi={closeDrawer} userid={myUserId} profileFunction={() =>{closeDrawer(); openprofile(myUserId)}} logout={async()=>{await delete_token(); setUser(0)}}/>
   );
   const navigationView2 = () => (
     <ProfileNavigation closeNavi={closeDrawer2} users={users} renderingUser={renderingUser}/>
@@ -474,7 +475,7 @@ import { connect2, singin } from './connections';
 
 
           </View>
-          <Header button1={buttonback} img={imgheader}>
+          <Header button1={buttonback} img={imgheader} >
               <View style={[{flex:1}]}></View>
               <TouchableOpacity style={[{ marginTop: 5,
                                           marginBottom: 8,
@@ -482,7 +483,7 @@ import { connect2, singin } from './connections';
                                           marginLeft:'5%',
                                           marginRight:'5%',}]} 
                                           onPress={()=>{
-                                            connect2()
+                                            nothing()
                                             // setresp('0')
                                             }}>
               <Image source={require('./img/search.png')} style={[{height:'100%', width:40}]} resizeMode="contain"></Image>

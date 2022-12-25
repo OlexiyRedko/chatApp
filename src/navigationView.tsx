@@ -5,7 +5,7 @@ const styles = require('./styles.js');
 const users = require('./users.js');
 
 
-function NavigationView({closeNavi, userid, profileFunction}) {
+function NavigationView({closeNavi, userid, profileFunction, logout}) {
     const nothing = () =>{
         
       }
@@ -13,7 +13,19 @@ function NavigationView({closeNavi, userid, profileFunction}) {
     return(
         
     <View style={[{backgroundColor:'#213144', flex:1}]}>
-        <Header button1={closeNavi}></Header>
+        <Header button1={closeNavi}>
+            <TouchableOpacity style={[{ marginTop: 5,
+                                          marginBottom: 8,
+                                          height:20,
+                                          marginLeft:'5%',
+                                          marginRight:'5%',}]} 
+                                          onPress={()=>{
+                                            logout()
+                                            // setresp('0')
+                                            }}>
+                <Image source={require('./img/search.png')} style={[{height:'100%', width:40}]} resizeMode="contain"></Image>
+              </TouchableOpacity>
+        </Header>
         <TouchableOpacity style={[{ height:65, width:'100%', flexDirection:'row'}]} onPress={profileFunction}>
             <Image source={users[userid-1]['img']} style={[{  height: 55,
                                                             width: 55,

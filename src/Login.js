@@ -1,19 +1,33 @@
 import React, { useEffect, useRef, useState} from 'react'
 import { StatusBar, Keyboard, Text, View, TextInput, TouchableOpacity, SafeAreaView, Animated, Dimensions, BackHandler, PanResponder, ScrollView, Image, DrawerLayoutAndroid} from 'react-native';
 const styles = require('./styles.js')
-import { connect2, login, fakeconnect2 } from './connections';
+import { connect2, login, fakeconnect2, get_my_id} from './connections';
 
 const LoginScreen = (func) => {
     const [Login, setLogin] = useState("")
     const [Password, setPassword] = useState("")
+    const try_login = async()=>{
+        try{
+            id = await get_my_id()
+            console.log(id)
+            func(id)
+        }catch(err){
+            console.log(err)
+        }
+    }
+    
 
     const localLogin = async (log, pass)=>{
         user = await login(log, pass)
         if( user[0]){
-            func(user[1])
+            id = await get_my_id()
+            console.log(id)
+            func(id)
         }
         
     }
+
+
     
     return(
         <View style={[styles.container, {backgroundColor: '#b3d6b8', flexDirection:'row'}]} >
@@ -58,7 +72,7 @@ const LoginScreen = (func) => {
                 <TouchableOpacity onPress={()=>{localLogin(Login, Password)}}>
                     <Text>next</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={()=>{fakeconnect2(aunth, func)}}>
+                <TouchableOpacity onPress={()=>{fakeconnect2(func)}}>
                     <Text>pass</Text>
                 </TouchableOpacity>
         </View>
