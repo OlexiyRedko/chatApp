@@ -19,8 +19,11 @@ const LoginScreen = (func) => {
 
     const localLogin = async (log, pass)=>{
         user = await login(log, pass)
+        console.log(user)
         if( user[0]){
+            console.log("id")
             id = await get_my_id()
+            console.log("id")
             console.log(id)
             func(id)
         }

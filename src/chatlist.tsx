@@ -5,6 +5,7 @@ const styles = require('./styles.js');
 
 
 function Chatlist({bgColor, width, position, data, renderer, opener}) {
+    
   
     const itemwidth = {
         transform: [{ translateX: width }], 

@@ -2,7 +2,7 @@ const chats = [
     [
         {
             id:1,
-            userid:1,
+            userid:42,
             msg:"hello",
             time:"12:45",
             day:"10",
@@ -11,7 +11,7 @@ const chats = [
         }, 
         {
             id:2,
-            userid:3,
+            userid:47,
             msg:"hi",
             time:"12:45",
             day:"10",
@@ -20,7 +20,7 @@ const chats = [
         }, 
         {
             id:3,
-            userid:1,
+            userid:42,
             msg:"what's the weather today in your city",
             time:"12:45",
             day:"10",
@@ -29,7 +29,7 @@ const chats = [
         },
         {
             id:4,
-            userid:2,
+            userid:41,
             msg:"mostly sunny, why asking?",
             time:"12:45",
             day:"10",
@@ -38,7 +38,7 @@ const chats = [
         },
         {
             id:5,
-            userid:1,
+            userid:42,
             msg:"Im going to come for weekends",
             time:"12:45",
             day:"10",
@@ -47,7 +47,7 @@ const chats = [
         },
         {
             id:6,
-            userid:2,
+            userid:47,
             msg:"Cool! waiting for u",
             time:"12:45",
             day:"10",
@@ -56,7 +56,7 @@ const chats = [
         },
         {
             id:7,
-            userid:1,
+            userid:42,
             msg:"I have some shit to do on st but ill be free on sn",
             time:"12:45",
             day:"10",
@@ -65,7 +65,7 @@ const chats = [
         },
         {
             id:8,
-            userid:2,
+            userid:41,
             msg:"ok, ill come for u on sunday",
             time:"12:45",
             day:"10",
@@ -74,7 +74,7 @@ const chats = [
         },
         {
             id:9,
-            userid:1,
+            userid:42,
             msg:"yeah, we coulg see others",
             time:"12:45",
             day:"10",
@@ -83,7 +83,7 @@ const chats = [
         },
         {
             id:10,
-            userid:1,
+            userid:42,
             msg:"ill text them",
             time:"12:45",
             day:"10",
@@ -92,7 +92,7 @@ const chats = [
         },
         {
             id:11,
-            userid:1,
+            userid:42,
             msg:"hello",
             time:"12:45",
             day:"10",
@@ -101,7 +101,7 @@ const chats = [
         },
         {
             id:12,
-            userid:2,
+            userid:41,
             msg:"hi",
             time:"12:45",
             day:"10",
@@ -110,7 +110,7 @@ const chats = [
         },
         {
             id:13,
-            userid:1,
+            userid:42,
             msg:"what's the weather today in your city",
             time:"12:45",
             day:"10",
@@ -119,7 +119,7 @@ const chats = [
         },
         {
             id:14,
-            userid:2,
+            userid:41,
             msg:"mostly sunny, why asking?",
             time:"12:45",
             day:"10",
@@ -128,7 +128,7 @@ const chats = [
         },
         {
             id:15,
-            userid:1,
+            userid:42,
             msg:"Im going to come for weekends",
             time:"12:45",
             day:"10",
@@ -137,7 +137,7 @@ const chats = [
         },
         {
             id:16,
-            userid:3,
+            userid:41,
             msg:"Cool! waiting for u",
             time:"12:45",
             day:"10",
@@ -146,7 +146,7 @@ const chats = [
         },
         {
             id:17,
-            userid:1,
+            userid:42,
             msg:"I have some shit to do on st but ill be free on sn",
             time:"12:45",
             day:"10",
@@ -155,7 +155,7 @@ const chats = [
         },
         {
             id:18,
-            userid:2,
+            userid:47,
             msg:"ok, ill come for u on sunday",
             time:"12:45",
             day:"10",
@@ -164,7 +164,7 @@ const chats = [
         },
         {
             id:19,
-            userid:2,
+            userid:47,
             msg:"never mind",
             time:"12:45",
             
@@ -175,7 +175,7 @@ const chats = [
         },
         {
             id:20,
-            userid:2,
+            userid:41,
             msg:"any text here",
             time:"13:00",
             
@@ -185,7 +185,7 @@ const chats = [
         },
         {
             id:21,
-            userid:1,
+            userid:42,
             msg:"yeah, we coulg see others",
             time:"13:00",
             
@@ -195,7 +195,7 @@ const chats = [
         },
         {
             id:22,
-            userid:1,
+            userid:42,
             msg:"ill text them",
             time:"13:00",
             
@@ -203,274 +203,6 @@ const chats = [
             month:"11",
             year:"2022",
         },  
-    ],
-    [
-        {
-            id:1,
-            userid:1,
-            msg:"hey",
-            time:"12:45",
-            
-            day:"10",
-            month:"11",
-            year:"2022",
-        },
-        {
-            id:2,
-            userid:1,
-            msg:"anybody here?",
-            time:"12:45",
-            
-            day:"10",
-            month:"11",
-            year:"2022",
-        },
-        {
-            id:3,
-            userid:2,
-            msg:"im sleeping",
-            time:"12:45",
-            
-            day:"10",
-            month:"11",
-            year:"2022",
-        },
-        {
-            id:4,
-            userid:1,
-            msg:"me too but wait",
-            time:"12:45",
-            
-            day:"10",
-            month:"11",
-            year:"2022",
-        },
-        {
-            id:5,
-            userid:1,
-            msg:"are you on party tommorow?",
-            time:"12:45",
-            
-            day:"10",
-            month:"11",
-            year:"2022",
-        },
-    ],
-    [
-        {
-            id:1,
-            userid:1,
-            msg:"hello",
-            time:"12:45",
-            
-            day:"10",
-            month:"11",
-            year:"2022",
-        }, 
-    ],
-    [
-        {
-            id:1,
-            userid:1,
-            msg:"hello",
-            time:"12:45",
-            
-            day:"10",
-            month:"11",
-            year:"2022",
-        }, 
-    ],
-    [
-        {
-            id:1,
-            userid:1,
-            msg:"hello",
-            time:"12:45",
-            
-            day:"10",
-            month:"11",
-            year:"2022",
-        }, 
-    ],
-    [
-        {
-            id:1,
-            userid:1,
-            msg:"hello",
-            time:"12:45",
-            
-            day:"10",
-            month:"11",
-            year:"2022",
-        }, 
-    ],
-    [
-        {
-            id:1,
-            userid:1,
-            msg:"hello",
-            time:"12:45",
-            
-            day:"10",
-            month:"11",
-            year:"2022",
-        }, 
-    ],
-    [
-        {
-            id:1,
-            userid:1,
-            msg:"hello",
-            time:"12:45",
-            
-            day:"10",
-            month:"11",
-            year:"2022",
-        }, 
-    ],
-    [
-        {
-            id:1,
-            userid:1,
-            msg:"hello",
-            time:"12:45",
-            
-            day:"10",
-            month:"11",
-            year:"2022",
-        }, 
-    ],
-    [
-        {
-            id:1,
-            userid:1,
-            msg:"hello",
-            time:"12:45",
-            
-            day:"10",
-            month:"11",
-            year:"2022",
-        }, 
-    ],
-    [
-        {
-            id:1,
-            userid:1,
-            msg:"hello",
-            time:"12:45",
-            
-            day:"10",
-            month:"11",
-            year:"2022",
-        }, 
-    ],
-    [
-        {
-            id:1,
-            userid:1,
-            msg:"hello",
-            time:"12:45",
-            
-            day:"10",
-            month:"11",
-            year:"2022",
-        }, 
-    ],
-    [
-        {
-            id:1,
-            userid:1,
-            msg:"hello",
-            time:"12:45",
-            
-            day:"10",
-            month:"11",
-            year:"2022",
-        }, 
-    ],
-    [
-        {
-            id:1,
-            userid:1,
-            msg:"hello",
-            time:"12:45",
-            
-            day:"10",
-            month:"11",
-            year:"2022",
-        }, 
-    ],
-    [
-        {
-            id:1,
-            userid:1,
-            msg:"hello",
-            time:"12:45",
-            
-            day:"10",
-            month:"11",
-            year:"2022",
-        }, 
-    ],
-    [
-        {
-            id:1,
-            userid:1,
-            msg:"hello",
-            time:"12:45",
-            
-            day:"10",
-            month:"11",
-            year:"2022",
-        }, 
-    ],
-    [
-        {
-            id:1,
-            userid:1,
-            msg:"hello",
-            time:"12:45",
-            
-            day:"10",
-            month:"11",
-            year:"2022",
-        }, 
-    ],
-    [
-        {
-            id:1,
-            userid:1,
-            msg:"hello",
-            time:"12:45",
-            
-            day:"10",
-            month:"11",
-            year:"2022",
-        }, 
-    ],
-    [
-        {
-            id:1,
-            userid:1,
-            msg:"hello",
-            time:"12:45",
-            
-            day:"10",
-            month:"11",
-            year:"2022",
-        }, 
-    ],
-    [
-        {
-            id:1,
-            userid:1,
-            msg:"hello",
-            time:"12:45",
-            
-            day:"10",
-            month:"11",
-            year:"2022",
-        }, 
     ],
 ]
 module.exports = chats

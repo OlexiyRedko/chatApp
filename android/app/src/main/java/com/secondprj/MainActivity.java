@@ -4,8 +4,10 @@ import android.os.Bundle;
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
+import com.rnfs.RNFSPackage;  // <--- import
 
 public class MainActivity extends ReactActivity {
+  
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(null);
@@ -50,4 +52,6 @@ public class MainActivity extends ReactActivity {
       return BuildConfig.IS_NEW_ARCHITECTURE_ENABLED;
     }
   }
+
+  
 }

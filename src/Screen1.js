@@ -5,6 +5,8 @@ PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
 PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
 PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION)
 PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION)
+PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE)
+PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE)
 import Geolocation from '@react-native-community/geolocation';
 import { FlashList } from '@shopify/flash-list';
 import xtype from 'xtypejs'
@@ -17,12 +19,12 @@ import Chatlist from './chatlist.tsx'
 import TheChat from './thechat';
 import NavigationView from './navigationView';
 import ProfileNavigation from './profileNavigsator';
-import { delete_token} from './connections';
+import { delete_token, user_info} from './connections';
 // Geolocation.setRNConfiguration({
 //     skipPermissionRequests: false,
 //     locationProvider:'auto'
 //   })
-
+const RNFS = require('react-native-fs');
 
 
 
@@ -181,7 +183,7 @@ import { delete_token} from './connections';
   const [drawerstate2, setDrawer2State] = useState(0)
   const [resp, setresp] = useState("")
   let drawer
-  let drawer2
+  const [drawer2, setDrawer2] = useState(undefined)
   let imgheader
   if(indw==0){imgheader=require('./img/menu.png')}
   const openDrawer =()=>{
@@ -237,7 +239,7 @@ import { delete_token} from './connections';
     }
     setdata([...data,  ...array])
   }
-  const nothing = ()=>{
+  const nothing = async ()=>{
   };
   const openchat=(chatid)=>
   {
@@ -357,34 +359,6 @@ import { delete_token} from './connections';
     
     setbgcolor('#b3d6b8')
   }
-  const send = (chatid, msg) => {
-    if(msg != ""){
-      if(chats[chatid][chats[chatid].length-1].userid == myUserId && chats[chatid][chats[chatid].length-1].time == (new Date().getHours() +':'+new Date().getMinutes())){
-        chats[chatid].push({
-          id: chats[chatid].length-0+1,
-          userid: myUserId,
-          msg: msg,
-          small:true,
-          time: (new Date().getHours() +':'+new Date().getMinutes()),
-          date: new Date().getDate(),
-          month: new Date().getMonth(),
-          year: new Date().getFullYear()
-          })
-      }else{
-        chats[chatid].push({
-          id: chats[chatid].length-0+1,
-          userid: myUserId,
-          msg: msg,
-          time: (new Date().getHours() +':'+new Date().getMinutes()),
-          date: new Date().getDate(),
-          month: new Date().getMonth(),
-          year: new Date().getFullYear()
-          })
-      }
-      
-      reloadw() 
-    }
-  }
   const sliderwidth=open4.interpolate({
     inputRange:[0, 1],
     outputRange:[windowWidth-(windowWidth*15/100), windowWidth]
@@ -397,7 +371,7 @@ import { delete_token} from './connections';
       setInfobg('#2d425f')
       closeDrawer2()
     }else{
-      setRUser(userid-1)
+      setRUser(userid)
       setInfobg('transparent')
       openDrawer2()
     }
@@ -415,12 +389,15 @@ import { delete_token} from './connections';
     height: pHeight2,
   }
 
+  const returnFile = async (file)=>{
+    return 
+  }
 
   const navigationView = () => (
-    <NavigationView closeNavi={closeDrawer} userid={myUserId} profileFunction={() =>{closeDrawer(); openprofile(myUserId)}} logout={async()=>{await delete_token(); setUser(0)}}/>
+    <NavigationView closeNavi={closeDrawer} userid={user} profileFunction={() =>{closeDrawer(); openprofile(user)}} logout={async()=>{await delete_token(); setUser(0)}}/>
   );
   const navigationView2 = () => (
-    <ProfileNavigation closeNavi={closeDrawer2} users={users} renderingUser={renderingUser}/>
+    <ProfileNavigation closeNavi={closeDrawer2} renderingUser={renderingUser}/>
   );
 
   return (
@@ -431,7 +408,7 @@ import { delete_token} from './connections';
         backgroundColor={'transparent'} 
         translucent={true}/>
       <DrawerLayoutAndroid
-                      ref={(ref) => {drawer2 = ref}}
+                      ref={(ref) => {setDrawer2(ref)}}
                       drawerWidth={windowWidth}
                       drawerPosition={'right'}
                       renderNavigationView={navigationView2}
@@ -460,15 +437,13 @@ import { delete_token} from './connections';
                       <TheChat
                       data ={JSON.parse(JSON.stringify(chats[chat])).reverse()}
                       inputRef = {(ref) => {inputref = ref}}
-                      users = {users}
                       panResponder ={panResponder}
                       chat = {chat} 
-                      send = {send}
                       reloadw = {reloadw} 
                       position = {open3} 
                       width = {sliderwidth}
                       openprof = {openprofile}
-                      myUser = {myUserId}/>
+                      myUser = {user}/>
                          
                 </View>
                 
@@ -483,7 +458,7 @@ import { delete_token} from './connections';
                                           marginLeft:'5%',
                                           marginRight:'5%',}]} 
                                           onPress={()=>{
-                                            nothing()
+                                            user_info(user)
                                             // setresp('0')
                                             }}>
               <Image source={require('./img/search.png')} style={[{height:'100%', width:40}]} resizeMode="contain"></Image>

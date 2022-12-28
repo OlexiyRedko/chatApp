@@ -1,8 +1,11 @@
 import io from 'socket.io-client'
 import EncryptedStorage from 'react-native-encrypted-storage';
+import RNFetchBlob from 'rn-fetch-blob'
+var RNFS = require('react-native-fs');
 
 
-const URL = "http://10.3.64.241:3000/"
+// "http://46.219.35.254:3000/"
+const URL = "http://46.219.35.254:3000/"
 const socket = io(URL)
 
 
@@ -14,6 +17,59 @@ const connect2 = async (loginObj, func) =>{
 
 const fakeconnect2 = async (func) =>{
   func("1")
+}
+
+const user_info = async (id)=>{
+  console.log(id)
+  const q = 'users/getinfo/'+id
+  const token = "Bearer "+ await get_token()
+  try{
+    const response = await fetch(URL+q, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization:  token
+      },
+    });
+    const js = await response.json()
+    const code = response.status
+    if(code == 200){      
+      img(js.photoURL)
+      return(js)
+    }else{
+      return 0 
+    }
+    
+  }catch(err){
+    console.log("here" + err)
+  }
+}
+
+const img = async (picture) =>{
+  const q = 'users/getpicture/'+picture
+  console.log(q)
+  const token = "Bearer "+ await get_token()
+  const {config, fs} = RNFetchBlob
+  let PictDir =  fs.dirs.PictureDir
+  let options = {
+    fileCashe: true,
+    addAndroidDownloads:{
+      useDownloadManager:true,
+      notification: true,
+      path: PictDir + "/Ncity/"+picture,
+      description:'img'
+    }
+  }
+    try{
+      if(await RNFS.exists(PictDir + "/Ncity/"+picture)){
+        console.log("exists!!!")
+      }else{
+        config(options).fetch('GET', URL+q, {Authorization:  token}).then(res =>{console.log(JSON.stringify(res))})
+      }
+    }catch(err){
+      console.log(err)
+    }
 }
 
 
@@ -62,7 +118,7 @@ const fakeconnect2 = async (func) =>{
         }
         
       }catch(err){
-        console.log("here" + err)
+        console.log("here11" + err)
       }
   }
 
@@ -97,4 +153,4 @@ const fakeconnect2 = async (func) =>{
     }
   }
 
-  export {connect2, login, fakeconnect2,  get_my_id, delete_token}
+  export {connect2, login, fakeconnect2,  get_my_id, delete_token, user_info}
