@@ -3,7 +3,7 @@ import {Keyboard, Animated, TouchableOpacity, Text, Image, View, TextInput} from
 import { FlashList } from '@shopify/flash-list';
 const styles = require('./styles.js');
 let chattexts = [{text:""},]
-import {user, userOnlyBD} from "./users.js"
+import {user, userOnlyBD, cacheUser, returncachedUser} from "./users.js"
 const chats = require('./chats.js')
 
 
@@ -57,7 +57,6 @@ function TheChat({ data, renderer, panResponder, chat, position, width, openprof
             month: new Date().getMonth(),
             year: new Date().getFullYear()
             }, ...arr]) 
-            console.log("here")
           }else{
             chats[chatid].push({
               id: chats[chatid].length-0+1,
@@ -78,7 +77,6 @@ function TheChat({ data, renderer, panResponder, chat, position, width, openprof
               month: new Date().getMonth(),
               year: new Date().getFullYear()
               }, ...arr]) 
-              console.log("here2")
           } 
         }
       }
@@ -108,28 +106,37 @@ function TheChat({ data, renderer, panResponder, chat, position, width, openprof
     
     const Item2 = ({ item }) =>
     {
-      let curruser = userOnlyBD(item.userid)
-      const [img, setImg] = useState("file:///storage/emulated/0/Pictures/Ncity/"+curruser.photoURL)
-      const [username, setUsername] = useState(curruser.name1+curruser.name2)
+      const [curruser, setcurruser] = useState({
+        id: item.userid,
+        email: "",
+        usertag: "",
+        name1: "",
+        name2: "",
+        tags: "",
+        photoURL: "1.png",
+        bio: ""
+    })
+      useEffect(()=>{
+        const res = returncachedUser(item.userid)
+          if(res != 0){
+            setcurruser(res)
+          }else{
+            user(item.userid, setcurruser)
+          }
+      },[])
       
-      useEffect(()=>{set_all()},[])
-      // {uri:'file:///storage/emulated/0/Pictures/Ncity/'+users[userid].img}
-      const set_all = async () =>{
-        curruser = await user(item.userid)
-        setImg('file:///storage/emulated/0/Pictures/Ncity/'+curruser.photoURL)
-        setUsername(curruser.name1+curruser.name2) 
-      }
+      
       
 
       return (
         <View  style={selectStyle(item)} >
           <View style = {[{flexDirection: 'row'}]}>
-            <Text style={[{color: 'white', fontWeight: 'bold',}]}>{username} </Text>
+            <Text style={[{color: 'white', fontWeight: 'bold',}]}>{curruser.name1+curruser.name2} </Text>
             
           </View>
           <View style={selectStyle2(item)} >
               <TouchableOpacity onPress={() => openprof(item.userid)} >
-                <Image source={{uri: img}} style={styles.userimage} resizeMode="stretch"></Image>
+                <Image source={{uri: 'file:///storage/emulated/0/Pictures/Ncity/'+curruser.photoURL}} style={styles.userimage} resizeMode="stretch"></Image>
               </TouchableOpacity>
             <Text style={[styles.messagetext]}>{item.msg} </Text>
             <Text style={[{color: 'white', alignSelf:"flex-end", fontSize: 10, margin:5}]}>{item['time']} </Text>

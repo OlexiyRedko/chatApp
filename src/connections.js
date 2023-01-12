@@ -20,7 +20,6 @@ const fakeconnect2 = async (func) =>{
 }
 
 const user_info = async (id)=>{
-  console.log(id)
   const q = 'users/getinfo/'+id
   const token = "Bearer "+ await get_token()
   try{
@@ -40,15 +39,13 @@ const user_info = async (id)=>{
     }else{
       return 0 
     }
-    
   }catch(err){
-    console.log("here" + err)
+    console.log("user info error: " + err)
   }
 }
 
 const img = async (picture) =>{
   const q = 'users/getpicture/'+picture
-  console.log(q)
   const token = "Bearer "+ await get_token()
   const {config, fs} = RNFetchBlob
   let PictDir =  fs.dirs.PictureDir
@@ -63,7 +60,6 @@ const img = async (picture) =>{
   }
     try{
       if(await RNFS.exists(PictDir + "/Ncity/"+picture)){
-        console.log("exists!!!")
       }else{
         config(options).fetch('GET', URL+q, {Authorization:  token}).then(res =>{console.log(JSON.stringify(res))})
       }

@@ -1,12 +1,6 @@
 import React, { useEffect, useRef, useState} from 'react'
 import { StatusBar, Keyboard, Text, View, Button, PermissionsAndroid,  TouchableOpacity, SafeAreaView, Animated, Dimensions, BackHandler, PanResponder, ScrollView, Image, DrawerLayoutAndroid} from 'react-native';
 import DrawerLayout from 'react-native-gesture-handler/DrawerLayout';
-PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
-PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
-PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION)
-PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION)
-PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE)
-PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE)
 import Geolocation from '@react-native-community/geolocation';
 import { FlashList } from '@shopify/flash-list';
 import xtype from 'xtypejs'
@@ -39,6 +33,14 @@ const RNFS = require('react-native-fs');
 
 
  const Scr1 = (user, setUser) => {
+  (async()=>{
+    await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
+    await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
+    await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION)
+    await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION)
+    await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE)
+    await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE)
+  })()
   
   const backAction = () => {
     if(drawerstate==1){
